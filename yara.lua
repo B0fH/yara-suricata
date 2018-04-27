@@ -36,12 +36,12 @@ end
 
 function setup (args)
     -- Configure as needed
-    suricata_filestore = string.format('%s/%s', SCLogPath(), 'filestore')
+    suricata_filestore = string.format('%s%s', SCLogPath(), 'filestore')
     yara_path = '/usr/bin/yara'
     yara_rules_path = '/usr/share/yara/rules.yar'
     yara_log_name = 'yara.json'
 
-    yara_log = assert(io.open(string.format("%s/%s", SCLogPath(), yara_log_name), 'a'))
+    yara_log = assert(io.open(string.format("%s%s", SCLogPath(), yara_log_name), 'a'))
 end
 
 function log (args)
