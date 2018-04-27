@@ -16,3 +16,13 @@ Once installed and configured, you'll need to configure the rules to store the d
     yara_rules_path: The path to your Yara rules file, preferably compiled. Defaults to '/usr/share/yara/rules.yar'
     
     yara_log_name: The name of the Yara log. The name defaults to 'yara.json', under the <Suricata log path>
+
+Output looks like so:
+  {
+    "filename":"/f.tmp",
+    "rules":    ["BlackEnergy_Driver_USBMDM"],
+    "size":60928,
+    "sha256":"244dd8018177ea5a92c70a7be94334fa457c1aab8a1c1ea51580d7da500c3ad5"
+  }
+    
+If there are no rule hits, the script will delete the file.
