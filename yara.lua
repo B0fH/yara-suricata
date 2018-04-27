@@ -63,7 +63,7 @@ function run_yara ()
                                        string.sub(sha256, 0, 2),
                                        sha256)
 
-            local yara_command = string.format('%s %s %s',
+            local yara_command = string.format('%s -w %s %s',
                 yara_path,
                 yara_rules_path,
                 file_path)
