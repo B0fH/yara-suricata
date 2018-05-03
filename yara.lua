@@ -48,7 +48,6 @@ function setup (args)
 end
 
 function log (args)
-    SCLogInfo(args)
     ret, output = run_yara()
     if ret then
         yara_log:write(output, '\n')
