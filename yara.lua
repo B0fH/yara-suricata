@@ -35,29 +35,33 @@ function init (args)
 end
 
 function setup (args)
+    --Ensure that the log path has both a leading and trailing slash
+    suricata_log_path = fix_path(SCLogPath())
+
     -- Configure as needed
-    suricata_filestore = string.format('%s%s', SCLogPath(), 'filestore')
+    suricata_filestore = suricata_log_path .. 'filestore'
     yara_path = '/usr/bin/yara'
-    yara_rules_path = '/usr/share/yara/rules.yar'
+    yara_rules_path = '/usr/share/yara-rules/rules.yar'
     yara_log_name = 'yara.json'
 
-    yara_log = assert(io.open(string.format("%s%s", SCLogPath(), yara_log_name), 'a'))
+    yara_log = assert(io.open(string.format("%s%s", suricata_log_path, yara_log_name), 'a'))
 end
 
 function log (args)
+    SCLogInfo(args)
     ret, output = run_yara()
     if ret then
-        yara_log:write(output .. '\n')
+        yara_log:write(output, '\n')
+        yara_log:flush()
     end
 end
 
 function run_yara ()
     state, stored = SCFileState()
-    --stored sometimes returns false even when the file is stored, could be a race condition in Suricata
-    --so we aren't checking it for now
-    if state == 'CLOSED' then
+    if stored then
         name, size, magic, md5, sha1, sha256 = SCFileInfo()
-        if string.len(sha256) == 64 then
+        SCLogDebug(string.format('state: %s, stored: %s, name: %s, size: %s, magic: %s, md5: %s, sha1: %s, sha256: %s', state, stored, name, size, magic, md5, sha1, sha256))
+        if sha256 ~= nil and string.len(sha256) == 64 then
             local file_path = string.format('%s/%s/%s', 
                                        suricata_filestore, 
                                        string.sub(sha256, 0, 2),
@@ -76,14 +80,16 @@ function run_yara ()
             ret['rules'] = {}
 
             local yara_pipe = assert(io.popen(yara_command))
-            for line in yara_pipe:lines() do
+            yara_output = yara_pipe:read('*a')
+            yara_pipe:close()
+            for line in yara_output:gmatch('[^\r\n]+') do
                 rule, file = string.match(line, '^(.+)[%s]+(.+)$')
+                SCLogDebug(string.format("rule: %s, file: %s, filepath: %s", rule, file, file_path)) 
                 if rule ~= nil and rule ~= '' and file == file_path then
                     table.insert(ret['rules'], rule)
                     has_rule_hit = true
                 end
             end
-            yara_pipe:close()
             
             if has_rule_hit then
                 return true, table_to_json(ret)
@@ -96,7 +102,6 @@ function run_yara ()
     return false, nil
 end
 
---Convert a table to JSON
 function table_to_json (t)
     local s = ''
     local open_char, close_char = '{', '}'
@@ -127,6 +132,14 @@ function table_to_json (t)
     s = s:sub(1, -2)
 
     return open_char .. s .. close_char
+end
+
+function fix_path(s)
+    s = s:gsub('^%/?(.+)', '/%1')
+    if s:match('%/$') == nil then
+        s = string.format('%s/', s)
+    end
+    return s
 end
 
 function deinit (args)
