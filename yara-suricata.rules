@@ -9,9 +9,9 @@ alert http any any -> any any (msg:"FILESTORE executable file"; flow:established
 
 # Word docs
 alert http any any -> any any (msg:"FILESTORE Word document"; flow:established,to_client; filesize:5KB<>1MB; filemagic:"Microsoft Word"; filestore; noalert; sid:95500004; rev:1;)
-#alert smtp $EXTERNAL_NET any -> $HOME_NET any (msg:"FILESTORE executable file"; filesize:5KB<>1MB; filemagic:"Microsoft Word"; filestore; noalert; sid:95500005; rev:1;)
+#alert smtp $EXTERNAL_NET any -> $HOME_NET any (msg:"FILESTORE Word document"; filesize:5KB<>1MB; filemagic:"Microsoft Word"; filestore; noalert; sid:95500005; rev:1;)
 
 
 # RTF
 alert http any any -> any any (msg:"FILESTORE RTF file"; flow:established,to_client; filesize:5KB<>1MB; filemagic:"Rich Text Format"; filestore; noalert; sid:95500006; rev:1;)
-#alert smtp $EXTERNAL_NET any -> $HOME_NET any (msg:"FILESTORE executable file"; filesize:5KB<>1MB; filemagic:"Rich Text Format"; filestore; noalert; sid:95500007; rev:1;)
+#alert smtp $EXTERNAL_NET any -> $HOME_NET any (msg:"FILESTORE RTF file"; filesize:5KB<>1MB; filemagic:"Rich Text Format"; filestore; noalert; sid:95500007; rev:1;)
