@@ -41,7 +41,9 @@ function setup (args)
     -- Configure as needed
     suricata_filestore = suricata_log_path .. 'filestore'
     yara_path = '/usr/bin/yara'
+    -- TODO: maybe use Yara rule tags instead of separate files
     yara_rules_path = '/usr/share/yara-rules/rules.yar'
+    yara_non_pe_rules_path = '/usr/share/yara-rules/non_pe_rules.yar'
     yara_log_name = 'yara.json'
 
     yara_log = assert(io.open(string.format("%s%s", suricata_log_path, yara_log_name), 'a'))
@@ -65,10 +67,15 @@ function run_yara ()
                                        suricata_filestore, 
                                        string.sub(sha256, 0, 2),
                                        sha256)
-
+            
+            local rule_path = yara_rules_path
+            if not string.match(magic, "executable") then
+                rule_path = yara_non_pe_rules_path
+            end
+          
             local yara_command = string.format('%s -w %s %s',
                 yara_path,
-                yara_rules_path,
+                rule_path,
                 file_path)
 
             local has_rule_hit = false
