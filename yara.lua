@@ -75,6 +75,7 @@ function run_yara ()
             local ret = {}
             ret['filename'] = name
             ret['size'] = size
+            ret['magic'] = magic
             ret['sha256'] = sha256
             ret['rules'] = {}
 
