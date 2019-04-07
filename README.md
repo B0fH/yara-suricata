@@ -1,11 +1,14 @@
 # yara-suricata
 A Yara Lua output script for Suricata
 
-This script requires:
+# Usage
+In order to use this script, you will need:
 1. A working Yara executable
 2. Yara rules
 3. Suricata file-store version 2 module, which means you'll need (at the time of this writing) Suricata 4.1.0 Beta.
 4. Suricata 4.1.0+ compiled with Lua or LuaJIT support and NSS support (for hashing)
+
+The script will need to be placed in the Suricata output scripts directory, and specified by name in output scripts section in the Suricata config file(suricata.yaml), please see https://suricata.readthedocs.io/en/latest/output/lua-output.html#yaml for the correct syntax.
 
 Once installed and configured, you'll need to configure the rules to store the desired files to be scanned by Yara. 
 There are 4 configuration options within the script that you may need to customize to suit your environment. 
