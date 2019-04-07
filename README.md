@@ -18,7 +18,9 @@ They are as follows:
     
     yara_path: The path to your Yara executable, defaults to '/usr/bin/yara'
     
-    yara_rules_path: The path to your Yara rules file, preferably compiled. Defaults to '/usr/share/yara/rules.yar'
+    yara_rules_path: The path to your compiled Yara rules file for executable file types. Defaults to '/usr/share/yara/rules.yar'
+    
+    yara_non_pe_rules_path: The path to your compiled Yara rules file for non-executable file types
     
     yara_log_name: The name of the Yara log. The name defaults to 'yara.json', under the <Suricata log path>
 
