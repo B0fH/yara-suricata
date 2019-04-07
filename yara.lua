@@ -73,7 +73,7 @@ function run_yara ()
                 rule_path = yara_non_pe_rules_path
             end
           
-            local yara_command = string.format('%s -w %s %s',
+            local yara_command = string.format('%s -C -w %s %s',
                 yara_path,
                 rule_path,
                 file_path)
