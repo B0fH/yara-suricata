@@ -1,5 +1,5 @@
 # yara-suricata
-A Yara Lua output script for Suricata
+A Yara Lua output script for Suricata (https://suricata-ids.org/)
 
 # Usage
 In order to use this script, you will need:
